@@ -1,0 +1,253 @@
+> 本文所有示例全部默认在vue-cli搭建的开发环境下
+# 一、简单认识
+在SPA应用中，浏览器访问地址中的hash与展示视图内容之间按照一套对应的规则进行映射,这就是路由。当URL中的hash(#hash)发生变化后，路由会根据制定好的规则,展示对应的视图内容。
+# 二、基本使用
+1、安装`vue-router`
+```javascript
+npm install --save
+```
+2、配置路由列表并创建路由实例
+```javascript
+// router.js
+
+// 引入vue，因为vue-router依赖vue
+import Vue from 'vue'
+// 引入vue-router路由
+import Router from 'vue-router'
+// 引入路由对应的组建
+import Home from './views/home'
+import About from './views/about'
+// 注册使用vue-router
+Vue.use(Router)
+// 创建路由实例
+export default new Router({
+  // 配置定义路由
+  routes: [
+    {
+      path: '/home',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
+    }
+  ]
+})
+```
+3、注入路由到根实例
+```javascript
+// main.js
+
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+
+Vue.config.productionTip = false
+
+new Vue({
+  // 注入
+  router,
+  render: h => h(App),
+}).$mount('#app')
+```
+4、路由导航组件和渲染组件
+```html
+<template>
+  <div id="app">   
+     <!-- 使用router-link组件进行导航  -->
+    <router-link to="/home">首页</router-link>
+    <router-link to="/about">关于</router-link>
+    <!-- 使用router-view组件进行渲染，路由匹配到的对应组件在这里渲染 -->
+    <router-view></router-view>
+  </div>
+</template>
+```
+
+# 三、嵌套路由
+在 `vue-router`中，路由可以嵌套使用，一个页面可以同时加载多层路由。
+```javascript
+//router.js
+
+// 1、配置嵌套路由列表
+const routes = [
+  {
+    path: '/home',
+    component: Home,
+    // 子路由
+    children: [
+      {
+        // 注意这里不需要'/'
+        path: 'child',
+        // Child为创建的子路由组件child.vue
+        component: Child
+      }
+    ]
+  }
+]
+// 2、在父级路由中添加router-view组件来渲染子路由组件
+ // home.vue
+ <template>
+  <div class="home">
+    我是首页父组件
+    // child.vue组件渲染的位置
+    <router-view></router-view>
+  </div>
+</template>
+
+// 访问：http://localhost:8080/#/home/child
+```
+# 四、动态路由匹配
+动态匹配路由就是，同一路由，通过传递不同的参数，在同一组件内加载不同的数据，多用于组件复用时传参。
+```javascript
+// router.js
+
+// 1、定义路由表中参数
+export default new Router({
+  routes: [
+    {
+      path: '/home',
+      name: 'home',
+      component: Home,
+    },
+    {
+      // 传递参数
+      path: '/about/:id',
+      name: 'about',
+      component: About
+    }
+  ]
+})
+
+//2、路由访问
+localhost:8080/about/1234
+
+// about.vue
+
+// 3、在about路由对应的页面获取对应的参数
+this.$route.params.id // 1234
+```
+# 五、命名路由
+在定义路由列表的时候可以给每一个路由定一个一个`name`属性，制定路由的名字。在路由跳转的时候可以指定路由名称进行跳转。
+```javascript
+// router.js
+ routes: [
+    {
+      path: '/home',
+      // 通过name属性指定路由名字
+      name: 'home',
+      component: Home,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
+    }
+  ]
+```
+```html
+// App.vue
+
+<template>
+  <div id="app">   
+     <!-- 通过name进行导航  -->
+    <router-link :to="{name: 'home'}">首页</router-link> | 
+    <router-link :to="{name: 'about'}">关于</router-link>
+    <!-- 路由匹配到的组件在这里渲染 -->
+    <router-view></router-view>
+  </div>
+</template>
+```
+# 六、命名视图
+如果想在同一个页面显示多个视图，而且每个视图显示在指定的位置，这时就需要用到 `vue-router`提供的命名视图了。
+```javascript
+// router.js
+
+{
+  path: '/view',
+  components: {
+    // 默认显示的组件
+    default: () => import('./views/child.vue'),
+    // chart组件
+    chart: () => import('./views/chart.vue'),
+    // list组件
+    list: () => import('./views/list.vue')
+  }
+}
+```
+```html
+// App.vue
+
+<template>
+  <div id="app">   
+     <!-- 使用router-link进行导航  -->|
+    <router-link to="/view">查看</router-link>
+    <!--路由匹配到的组件在这里渲染, 三个视图会同时展示，每个视图位置展示对应的内容 -->
+
+    <!-- 没指定名字时默认显示视图 -->
+    <router-view></router-view>
+    <!-- 展示chart视图 -->
+    <router-view name="chart"></router-view>
+    <!-- 展示list视图 -->
+    <router-view name="list"></router-view>
+  </div>
+</template>
+```
+# 七、路由重定向
+在路由表中通过`redirect`属性来制定路由重定向的位置,`redirect`属性接受三种类型的值
+```javascript
+// 方式一:字符串
+
+// router.js
+{
+  path: '/main',
+  redirect: '/home'
+}
+// 当访问localhost:8080/main的时候会跳转到home页
+```
+```javascript
+// 方式二: 对象
+
+// router.js
+{
+  path: '/main',
+  redirect: {
+    name: 'home'
+  }
+}
+// 当访问localhost:8080/main的时候会跳转到home页
+```
+```javascript
+// 方式三: 函数
+
+// router.js
+{
+  path: '/main',
+  redirect: () => {
+    // 返回对象
+    return {
+      name: 'home'
+    }
+  }
+  /* 或者字符串
+   redirect: () => '/home'
+  */
+}
+```
+# 八、路由别名
+在路由表中可以通过属性`alias`属性给路由设置一个别名,通过别名访问时,也可以跳转到当前路由.
+```javascript
+// router.js
+ {
+  path: '/home',
+  // 设置一个别名index
+  alias: '/index'
+  name: 'home',
+  component: Home
+}
+// 通过localhost:8080/index 访问时也会跳的home页
+```
+# 九、路由懒加载
+# 十、路由模式
+# 十一、路由传参
