@@ -98,7 +98,28 @@ const routes = [
 
 // 访问：http://localhost:8080/#/home/child
 ```
-# 四、动态路由匹配
+# 四、路由懒加载
+在路由表配置的时候，我们可以通过简单的`import XXX from '...vue'`的方式来引入路由对应的组件，然后赋值给`component`,但是该方式需要提前加载所有的组件，会影响首次加载速度，因此可以使用路由懒加载，跳转到指定路由时在加载对应的组件。
+```javascript
+// router.js
+
+// 一般方法
+
+import Home form './home.vue'
+// 路由表
+{
+  path: '/home',
+  component: Home
+}
+
+// 路由懒加载的方式
+{
+  path: '/home',
+  component: () => import('./home.vue')
+}
+  // 该方式只有当前路由为home时才会加载home组件 
+```
+# 五、动态路由匹配
 动态匹配路由就是，同一路由，通过传递不同的参数，在同一组件内加载不同的数据，多用于组件复用时传参。
 ```javascript
 // router.js
@@ -128,7 +149,7 @@ localhost:8080/about/1234
 // 3、在about路由对应的页面获取对应的参数
 this.$route.params.id // 1234
 ```
-# 五、命名路由
+# 六、命名路由
 在定义路由列表的时候可以给每一个路由定一个一个`name`属性，制定路由的名字。在路由跳转的时候可以指定路由名称进行跳转。
 ```javascript
 // router.js
@@ -159,7 +180,7 @@ this.$route.params.id // 1234
   </div>
 </template>
 ```
-# 六、命名视图
+# 七、命名视图
 如果想在同一个页面显示多个视图，而且每个视图显示在指定的位置，这时就需要用到 `vue-router`提供的命名视图了。
 ```javascript
 // router.js
@@ -194,7 +215,7 @@ this.$route.params.id // 1234
   </div>
 </template>
 ```
-# 七、路由重定向
+# 八、路由重定向
 在路由表中通过`redirect`属性来制定路由重定向的位置,`redirect`属性接受三种类型的值
 ```javascript
 // 方式一:字符串
@@ -235,7 +256,7 @@ this.$route.params.id // 1234
   */
 }
 ```
-# 八、路由别名
+# 九、路由别名
 在路由表中可以通过属性`alias`属性给路由设置一个别名,通过别名访问时,也可以跳转到当前路由.
 ```javascript
 // router.js
@@ -248,6 +269,30 @@ this.$route.params.id // 1234
 }
 // 通过localhost:8080/index 访问时也会跳的home页
 ```
-# 九、路由懒加载
-# 十、路由模式
-# 十一、路由传参
+# 十、编程式导航
+在`vue-router`中不仅可以通过`router-link`进行导航跳转，还可以使用路由实例`router`上的方法进行导航跳转
+```javascript
+// 前进
+this.$router.go(1)
+// 后退
+this.$router.go(-1)
+this.$router.back()
+// 跳转指定页
+  // 方式一：
+this.$router.push({
+  path: '/home'
+})
+  // 可以简写为
+this.$router.push('/home')
+  
+  // 方式二：
+this.$router.push({
+  name: 'home'
+})
+// 注：此时对应路由必须有name属性
+
+```
+# 十一、路由组件传参
+路由传参
+
+# 十二、路由模式
