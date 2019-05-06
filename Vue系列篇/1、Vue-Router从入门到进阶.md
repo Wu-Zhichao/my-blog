@@ -272,12 +272,12 @@ this.$route.params.id // 1234
 # 十、编程式导航
 在`vue-router`中不仅可以通过`router-link`进行导航跳转，还可以使用路由实例`router`上的方法进行导航跳转
 ```javascript
-// 前进
+// 1、前进
 this.$router.go(1)
-// 后退
+// 2、后退
 this.$router.go(-1)
 this.$router.back()
-// 跳转指定页
+//3、 跳转指定页
   // 方式一：
 this.$router.push({
   path: '/home'
@@ -291,8 +291,146 @@ this.$router.push({
 })
 // 注：此时对应路由必须有name属性
 
+// 4、替换
+this.$router.replace('/home')
+// 或
+this.$router.replace({
+  name: 'home'
+})
+// 使用该方式跳转时，不会在history中保存记录，跳转后无法返回到当前页
 ```
 # 十一、路由组件传参
-路由传参
+路由组件传参是项目开发中经常会遇到的需求， 经常需要从一个页面携带参数跳转到另一个页面，在跳转后的页面根据参数实现对应的业务逻辑。`vue-router`实现路由组件传参有以下三种方式可以实现：
+* 方式一：使用编程式导航的`params`属性传参
+```javascript
+// router.js
+const router = new Router({
+  routes: [
+    {
+      path: '/list/:id',
+      name: 'list',
+      component: List
+    }
+  ]
+})
+
+// list.vue
+this.$router.push({
+  name: 'detail',
+  params: {
+    // id是个变量，要传递的参数
+    id: id
+  }
+})
+// 或者
+this.$router.push({
+ path: `/detail/${id}`
+})
+
+// url
+localhost:8080/detail/20
+
+// detail.vue
+  // 在跳转页获取传递的参数id
+this.$route.params.id // 20
+```
+* 方式二：使用编程式导航的`query`属性传参
+```javascript
+// router.js
+const router = new Router({
+  routes: [
+    {
+      path: '/list',
+      name: 'list',
+      component: List
+    }
+  ]
+})
+
+// list.vue
+this.$router.push({
+  name: 'detail',
+  query: {
+    // id是传递的参数，变量
+    id: id
+  }
+})
+
+// url
+localhost:8080/detail?id=20
+
+// detail.vue
+  // 获取传递的id
+this.$route.query.id // 20
+```
+
+* 方式三：使用`props`属性传参
+```javascript
+// router.js
+const router = new Router({
+  routes: [
+    {
+      path: '/list/:id',
+      name: 'list',
+      component: List,
+      // 添加一个属性props
+      props: true
+    }
+  ]
+})
+
+// list.vue
+this.$router.push({
+  name: 'detail',
+  params: {
+    // id 为传递的参数，变量
+    id: id
+  }
+})
+
+// url
+localhost:8080/detail/20
+
+// detail.vue
+export default{
+  // 使用props接受参数
+  props:{
+    id: {
+      type: Number
+    }
+  }
+}
+// 在该组件中就可以直接使用id
+```
 
 # 十二、路由模式
+`vue-router`有两种路由模式，即：`hash`模式和`history`模式
+* `hash`模式
+
+  默认模式，即路由和域名之间有一个`#`连接。`hash`模式下无需做任何配置。
+```
+eg: localhost:8080/#/home
+```
+* `history`模式
+
+  即路由直接跟在域名后面
+```
+eg: localhost:6060/home
+```
+
+如果使用`history`模式，需要前端和后端配合，进行一些配置：
+* 前端配置：
+```javascript
+const router = new VueRouter({
+  mode: 'history',
+  routes: [...]
+})
+```
+* 后端nginx配置：
+```javascript
+location / {
+  ...
+  try_files $uri $uri/ /index.html;
+}
+```
+
