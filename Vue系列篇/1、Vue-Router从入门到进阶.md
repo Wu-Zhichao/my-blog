@@ -364,7 +364,9 @@ localhost:8080/detail?id=20
 this.$route.query.id // 20
 ```
 
-* 方式三：使用`props`属性传参
+* 方式三：使用`props`属性传参,该方式也存在两种实现
+
+①布尔方式
 ```javascript
 // router.js
 const router = new Router({
@@ -390,6 +392,48 @@ this.$router.push({
 
 // url
 localhost:8080/detail/20
+
+// detail.vue
+export default{
+  // 使用props接受参数
+  props:{
+    id: {
+      type: Number
+    }
+  }
+}
+// 在该组件中就可以直接使用id
+```
+②、函数方式
+```javascript
+// router.js
+
+const router = new Router({
+  routes: [
+    {
+      path: '/list',
+      name: 'list',
+      component: List,
+      // 添加一个属性props,()相当于return
+      props: route => ({
+        // 参数会根据当前路由动态传入
+        id: route.query.id
+      })
+    }
+  ]
+})
+
+// list.vue
+this.$router.push({
+  name: 'detail',
+  query: {
+    // // id 为传递的参数，变量
+    id:id
+  }
+})
+
+// url
+localhost:8080/detail?id=20
 
 // detail.vue
 export default{
@@ -434,3 +478,52 @@ location / {
 }
 ```
 
+# 十三、导航守卫
+
+## 1、全局守卫
+* beforeEach() 前置守卫
+
+   参数：
+  * to ：路由对象，即将跳转的路由对象
+  * form：路由对象，当前将要离开的路由对象
+  * next：函数，确定跳转时要执行next函数
+```javascript
+// 判断是否登陆 router.js
+
+router.beforeEach((to,from,next) => {
+  if (to.name !== 'login') {// 当前访问非登录页
+    if (token){ // 有token,表示已经登录
+      next()
+    } else { // 未登录
+      next({name: 'login'})
+    }
+  } else { // 当前访问的是登录页
+    if(token) {// 有token，直接跳转首页
+      next({name:'home'})
+    } else {
+      next() // 进行登录
+    }
+  }
+})
+```
+* beforeResolve() 全局导航守卫
+
+  导航被确认前和所有异
+
+   参数：
+  * to ：路由对象，即将跳转的路由对象
+  * form：路由对象，当前将要离开的路由对象
+  * next：函数，确定跳转时要执行next函数
+
+
+* afterEach() 后置钩子 
+
+  路由跳转完之后执行，多用来处理路由跳转之后的逻辑。
+
+   参数：
+  * to ：路由对象，即将跳转的路由对象
+  * form：路由对象，当前将要离开的路由对象
+
+## 2、路由独享守卫
+
+## 3、组建内守卫
