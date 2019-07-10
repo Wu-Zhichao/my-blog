@@ -204,8 +204,9 @@ this.$route.params.id // 1234
   <div id="app">   
      <!-- 使用router-link进行导航  -->|
     <router-link to="/view">查看</router-link>
+      
     <!--路由匹配到的组件在这里渲染, 三个视图会同时展示，每个视图位置展示对应的内容 -->
-
+      
     <!-- 没指定名字时默认显示视图 -->
     <router-view></router-view>
     <!-- 展示chart视图 -->
