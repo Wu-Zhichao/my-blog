@@ -75,8 +75,11 @@ npx webpack
     ```javascript
     let path = require('path')
     module.exports = {
-      mode: 'development',
+      // 模式，有两种-production development
+      mode: 'development',// 该方式打包后代码不会被压缩
+      // 入口
       entry: './src/index.js',
+      // 输出
       output: {
         filename: 'bundle.js',// 打包后的文件名
         path: path.resolve(__dirname,'build')// 打包后的文件路径，因为必须是一个绝对路径，因此引入了path模块
@@ -85,4 +88,53 @@ npx webpack
     ```
     配置完成后在控制台执行`npx webpack`命令，会在根目录下生成文件`build/bundle.js`，这就是打包后的文件。
 
+3. 打包后文件简单分析
 
+    webpack打包后的文件是一个立即执行函数，根据模块间的依赖，实现递归调用。
+
+4. 替换默认配置文件
+
+    webpack默认配置文件名为`webpack.config.js`或者`webpackfile.js`文件,如果不想使用这个默认文件名作为配置文件，而是使用其他文件名作为配置文件，如:`webpack.config.my.js`，此时，如果在执行`npx webpack`命令去打包则会出错。那么就需要执行如下打包命令:
+    ```
+    npx webpack --config webpack.config.my.js
+    ```  
+
+5. 自定义打包命令
+
+    `webpack`提供的默认的打包命令是`npx webpack`，如果修改了默认配置文件，则需要执行上述命令，但是它太长了，此时，我们可以自定义打包命令，修改`package.json`文件，如下：
+    ```
+    {
+      "name": "webpackdemo",
+      "version": "1.0.0",
+      "description": "",
+      "main": "index.js",
+      "scripts": {
+        "build": "webpack --config webpack.config.my.js"
+      },
+      "author": "",
+      "license": "ISC",
+      "devDependencies": {
+        "webpack": "^4.5.0",
+        "webpack-cli": "^2.0.14"
+      },
+      "dependencies": {
+        "webpack-dev-server": "^3.1.3"
+      }
+    }
+    ```
+    在`script`中新增`"build": "webpack --config webpack.config.my.js"`，这样打包的时候只需要执行如下命令即可：
+    ```
+    npm run build
+    ```
+# 四、Webpack核心概念
+## （一）、入口
+
+## （二）、出口
+
+## （三）、模块
+
+## （四）、插件
+
+## （五）、本地服务器
+
+# 五、Webpack应用场景
