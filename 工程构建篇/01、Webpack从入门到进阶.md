@@ -127,14 +127,91 @@ npx webpack
     npm run build
     ```
 # 四、Webpack核心概念
-## （一）、入口
+## （一）、入口-entry
+`entry`指定了`webpack`以哪个模块(文件)作为构建内部依赖图的开始，进入入口后，`webpack`会找出有哪些模块和库是入口模块直接和间接的依赖。每个依赖被加载处理后，输出到出口文件中。
 
-## （二）、出口
+`entry`可以指定单个入口或者多个入口:
 
-## （三）、模块
+* 单个入口配置
 
-## （四）、插件
+  * 字符串语法
+  ```javascript
+  module.exports = {
+    entry: __dirname + '/src/main.js'
+  }
+  ```
+  * 对象语法
+  ```javascript
+  module.exports = {
+    entry: {
+      // main 属性名可以自定义
+      main: __dirname + '/src/main.js'
+    }
+  }
+  ```
+* 多个入口配置
+`webpack`也可以同时指定多个入口文件，`webpack`会找出对应得文件依赖。
+  ```javascript
+  module.exports = {
+    entry: {
+      index1: __dirname + '/src/index1.js',
+      index2: __dirname + '/src/index2.js'
+    }
+  }
+  ```
 
-## （五）、本地服务器
+## （二）、出口-output
+通过`webpack`出口配置可以向硬盘写入编译后的文件，打包后的出口文件可以为一个文件，如多个入口文件也可以分别打包为多个出口文件。
+
+* 指定打包后输出文件路径和文件名
+  ```javascript
+  module.exports = {
+    // let path = require('path')
+    // 入口配置
+    entry: __dirname + '/src/main.js',
+    // 出口配置
+    output: {
+      filename: 'boundle.js',//打包后的文件名
+      path: __dirname + '/dist' // 指定打包后的路径，必须为绝对路径 
+      // 或者使用path.resolve，但需要引入path模块
+      // path: path.resolve(__dirname,'dist')
+    }
+  }
+  ```
+* 多入口分别打包时指定打包后文件名和入口文件名一致
+  ```javascript
+  module.exports = {
+    entry: {
+      index1: __dirname + '/src/index1.js',
+      index2: __dirname + '/src/index2.js'
+    },
+    output: {
+      filename: '[name].js',// 打包后的文件名与入口文件名一致
+      path: __dirname + '/dist'
+    }
+    // 打包后结果为：/dist/index1.js index2.js
+  }
+  ```
+* 指定输出后文件名后带`hash`值，且可以指定`hash`值得位数
+  
+  为了避免每次修改打包后为同一文件名产生缓存，可以在每次打包后的文件名后带一个`hash`值，每次打包都输出一个带`hash`的新的文件。
+  ```javascript
+  module.exports = {
+    entry: __dirname + '/src/main.js',
+    output: {
+      filename: 'bundle[hash].js',// 打包后的文件名带hash
+      // 指定hash位数
+      // filename: 'bundle[hash:6].js',// 打包后的文件名带6位数hash
+      path: __dirname + '/dist'
+    }
+  }  
+  ```
+
+## （三）、模块-module
+
+## （四）、插件-plugins
+插件(Plugins)是用来扩展``webpack`功能的，它会再整个构建过程中生效，用来执行相关具体任务的。
+
+## （五）、本地服务器-devServer
 
 # 五、Webpack应用场景
