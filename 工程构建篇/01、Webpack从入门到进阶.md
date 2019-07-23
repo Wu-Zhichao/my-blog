@@ -207,11 +207,164 @@ npx webpack
   }  
   ```
 
-## （三）、模块-module
+## （三）、模块(加载器)-module(loader)
+  在`webpack`中一切文件的都是模块，但是`webpack`只能识别`js`和`json`文件，因此在处理非以上两种类型的文件时，就需要使用到模块加载器,即`loader`。加载器允许`webpack`处理其他类型的文件，并将它们转换为可由应用程序使用并添加到依赖关系图的有效模块。如：`css`、`img`、`less`、`TypeScript`等，需要依靠对应的`loader`进行转换。使用`loader`前需要先使用`npm`进行安装。
+  * `loader`安装
+  ```javascript
+    // css-loader 处理css文件的loader
+    npm install --save-dev  css-loader
+  ```
+  
+  * `loader`配置
+
+    `loader`配置有三种语法：
+    1. 使用`use`,使用字符串或者数组形式
+    ```javascript
+    module.exports = {
+      module: {
+        rules: [
+          {
+            test: /\.css/,
+            // 字符串形式
+            use: 'css-loader',
+            // 数组形式
+            // use: ['style-loader','css-loader']
+            // 设置不解析/node_modules/ 文件夹下文件
+            exclude: /node_modules/
+          }
+        ]
+      }
+    }
+    ```
+    2. 直接使用`loader`, 使用字符串或者数组形式
+    ```javascript
+    module.exports = {
+      module: {
+        rules: [
+          {
+            test: /\.css/, // 匹配所有的css文件
+            // 字符串形式
+            loader: 'css-loader',
+            // 数组形式
+            // loader: ['style','css']
+            exclude: /node_modules/
+          }
+        ]
+      }
+    }
+    ```
+    3. 使用`use`，对象形式
+     ```javascript
+     module.exports = {
+       module: {
+         rules: [
+           {
+             test: /\.css/,
+             use: [
+               {
+                 loader: 'style-loader'
+               },
+               {
+                 loader: 'css-loader'
+               }
+             ],
+             exclude: /node_modules/
+           }
+         ]
+       }
+     }
+     ```
+
+  * `loader`执行顺序
+
+    `loader` 支持链式传递。`webpack`在处理多个`loader`时执行顺序是`从右到左，从下到上`。
+    ```javascript
+    module.exports = {
+      module: {
+        rules: [
+          {
+            test: '/\.js/',
+            use: ['loader1','loader2']
+          },
+          {
+            test: '/\.js/',
+            use: 'loader3'
+          }
+        ]
+      }
+    }
+    ```
+    那么，执行顺序是：`loader3` -> `loader2` -> `loader1`
+
+  * 控制`loader`的执行顺序
+
+    `webpack`中多个`loader`的默认执行顺序是`从右到左，从下到上`,但是这种执行顺序可以通过配置`enforce`属性进行控制。
+
+    `enforce`属性取值：
+
+      * `pre` 第一个执行
+      * `post` 最后一个执行
+    ```javascript
+    module.exports = {
+      module: {
+        rules: [
+          {
+            test: '/\.js/',
+            use: 'loader1',
+            enforce: 'pre'
+          },
+          {
+            test: '/\.js/',
+            use: 'loader2'
+          },
+          {
+            test: '/\.js/',
+            use: 'loader3',
+            enforce: 'post'
+          }
+        ]
+      }
+    }
+    ```
+    默认执行顺序: `loader3` -> `loader2` -> `loader1`
+
+    控制后执行顺序： `loader1` -> `loader2` -> `loader3`
+    
+
 
 ## （四）、插件-plugins
-插件(Plugins)是用来扩展``webpack`功能的，它会再整个构建过程中生效，用来执行相关具体任务的。
+  插件(Plugins)是用来扩展``webpack`功能的，它会再整个构建过程中生效，用来执行相关具体任务的。`webpack`有很多内置的插件，同时也有很多第三方插件可以使用，极大的丰富了`webpack`生态。
+  各个插件的使用方式可能不一样，需要具体参见相关插件文档。
 
-## （五）、本地服务器-devServer
+  插件使用：
+    
+  这里以`html-webpack-plugin`插件为例，该插件可以将带包后的`js`文件插入到`html`文件中。
+  * 插件安装
+    ```javascript
+     npm install --save-dev html-webpack-plugin
+    ```
+  * 引入插件
+    ```javascript
+     const htmlPlugin = require('html-webpack-plugin')
+    ```
+  * 配置插件
+   ```javascript
+    module.exports = {
+      ...
+      plugins: {
+        // 创建实例
+        new htmlPlugin({
+          minify: {
+            removeAttributeQuotes: true // 去掉挂在元素的引号
+          },
+          hash: true, // 引入的js文件后面加上hash，避免文件名一致可能产生的缓存
+          template: __dirname + '/src/index.html' // 要插入打包文件的html文件
+        })
+      }
+    }
+   ```
 
-# 五、Webpack应用场景
+# 五、本地服务器-devServer
+  
+
+# 六、Webpack应用场景
