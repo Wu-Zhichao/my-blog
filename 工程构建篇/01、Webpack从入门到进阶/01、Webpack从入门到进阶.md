@@ -23,7 +23,7 @@ Webpack可以看作是一个模块打包机，它可以实现将浏览器不能�
       npm install  webpack webpack-cli -D
     ```
 
-# 三、零配置Webpack体验
+# 三、零配置体验Webpack
 * 打包体验
 1. 新建src目录，并创建index.js文件
     ```
@@ -86,11 +86,11 @@ Webpack可以看作是一个模块打包机，它可以实现将浏览器不能�
       // 输出
       output: {
         filename: 'bundle.js',// 打包后的文件名
-        path: path.resolve(__dirname,'build')// 打包后的文件路径，因为必须是一个绝对路径，因此引入了path模块
+        path: path.resolve(__dirname,'dist')// 打包后的文件路径，因为必须是一个绝对路径，因此引入了path模块
       }
     }
     ```
-    配置完成后在控制台执行`npx webpack`命令，会在根目录下生成文件`build/bundle.js`，这就是打包后的文件。
+    配置完成后在控制台执行`npx webpack`命令，会在根目录下生成文件`dist/bundle.js`，这就是打包后的文件。
 
 3. 打包后文件简单分析
 
@@ -133,7 +133,7 @@ Webpack可以看作是一个模块打包机，它可以实现将浏览器不能�
     npm run build
     ```
 
-# 四、Webpack核心概念
+# 五、Webpack核心概念
 ## 1、入口-entry
 
   `entry`指定了`webpack`以哪个模块(文件)作为构建内部依赖图的开始，进入入口后，`webpack`会找出有哪些模块和库是入口模块直接和间接的依赖。每个依赖被加载处理后，输出到出口文件中。
@@ -347,7 +347,7 @@ Webpack可以看作是一个模块打包机，它可以实现将浏览器不能�
 
   插件使用：
     
-  这里以`html-webpack-plugin`插件为例，该插件可以将带包后的`js`文件插入到`html`文件中。
+  这里以`html-webpack-plugin`插件为例，该插件可以自动在创建`html`文件并将打包后的`js`文件插入到`html`文件中。
   * 插件安装
     ```javascript
      npm install --save-dev html-webpack-plugin
@@ -360,20 +360,24 @@ Webpack可以看作是一个模块打包机，它可以实现将浏览器不能�
     ```javascript
       module.exports = {
         ...
-        plugins: {
+        plugins: [
           // 创建实例
           new HtmlWebpackPlugin({
+            // 以该文件作为模块创建html
+            template: __dirname + '/src/index.html'
+            // 打包后文件压缩
             minify: {
-              removeAttributeQuotes: true // 去掉挂在元素的引号
+              // 去掉html中挂载元素的引号
+              removeAttributeQuotes: true 
             },
-            hash: true, // 引入的js文件后面加上hash，避免文件名一致可能产生的缓存
-            template: __dirname + '/src/index.html' // 要插入打包文件的html文件
+            // 引入的js文件后面加上hash，避免文件名一致可能产生的缓存
+            hash: true,
           })
-        }
+        ]
       }
     ```
 
-# 五、开发服务器-devServer
+# 六、开发服务器-devServer
 在实际开发过程中，都是基于一个本地服务器进行的，可以让浏览器监听你的代码，方便更改后刷新一下就可以查看效果。`webpack`也给我们提供了一个本地开发服务器，可以指定一个目录作为一个静态资源服务目录。开发过程中使用命令启动本地服务后，修改代码时会自动在内存中打包。
 
 webpack提供一个插件`webpack-dev-server`可以实现一个本地服务，其内部是使用`express`搭建的静态资源服务器。
@@ -428,16 +432,62 @@ webpack提供一个插件`webpack-dev-server`可以实现一个本地服务，�
     module.exports = {
       // 开发服务器配置
       devServer: {
+        // 监听地址，不配置默认是localhost
+        host: 'localhost',
         // 监听端口号
         port: 3000,
         // 在内存中打包的时候看到进度条
         progress: true,
         // 指定静态服务目录
-        contentBase: './build',
+        contentBase: './dist',
         // 自动打开浏览器
         open: true
       }
     }
     ```
+    此时，执行`npm run dev`命令会启动本地服务器，并自动打开浏览器，执行`dist`目录下的`html`文件。
 
-# 六、Webpack应用场景
+# 七、Webpack应用场景
+
+### 1、自动生成打包后入口`html`文件
+
+  使用`npm run build`打包后会按照出口配置生成打包后的`js`文件，但是打包后的文件需要挂载到`html`中才能执行，我们总不能手工创建`html`文件，然后引入吧？`webpack`作为如此`高端`的打包工具，当然可以帮我们自动处理。这里就需要使用到插件`html-webpack-plugin`.
+
+  * `html-webpack-plugin`作用
+
+    `html-webpack-plugin`可以在执行`npm run build`打包命令后，会根据配置模板在配置的出口目录下生成`html`文件作为入口`html`文件，并将打包后的`js`文件插入到`html`中，同时也可以根据配置压缩`html`文件。
+
+    在开发环境中，执行`npm run dev`命令，则不会在本地生成打包文件，则会在内存中生成以上文件，并自动在浏览器中打开该文件执行。
+
+  * 安装插件
+    ```javascript
+    npm install --save-dev html-webpack-plugin
+    ```
+  * 引入插件
+    ```javascript
+    let HtmlWebpackPlugin = require('html-webpack-plugin')
+    ```
+  * 配置插件
+    ```javascript
+    module.exports = {
+      ...
+      plugins: [
+        // 创建实例
+        new HtmlWebpackPlugin({
+          // 以该文件作为模板创建html
+          template: __dirname + '/src/index.html',
+          // 创建后html文件名，默认是拷贝模板名字
+          filename: 'index.html',
+          // html文件压缩
+          minify: {
+            // 去掉html中挂载元素的引号
+            removeAttributeQuotes: true,
+            // 打包后html变成一行
+            collapseWhitespace: true
+          },
+          // 引入的js文件后面加上hash，避免文件名一致可能产生的缓存
+          hash: true,
+        })
+      ]
+    }
+    ```
