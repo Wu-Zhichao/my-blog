@@ -13,11 +13,26 @@ module.exports = {
   // loader
   module: {
     rules: [
+      // 解析css文件
       {
-
+        // 匹配所有.css结尾的文件
+        test: /\.css$/,
+        // 解析css代码并插入到head中，执行顺序：从右到左
+        use: [{
+          loader: 'style-loader',
+          options: {
+            insertAt: 'top'
+          }
+        },'css-loader']
+      },
+      // 解析less文件
+      {
+        test: /\.less$/,
+        use: ['style-loader', 'css-loader','less-loader']
       }
     ]
   },
+  mode: 'development',
   // 插件
   plugins: [
     // 自动生成打包html，并引入打包文件，压缩html
