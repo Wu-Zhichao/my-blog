@@ -28,7 +28,12 @@ module.exports = {
       // 解析less文件
       {
         test: /\.less$/,
-        use: ['style-loader', 'css-loader','less-loader']
+        use: ['style-loader','css-loader','less-loader']
+      },
+      // 解析sass文件
+      {
+        test:/\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   },
