@@ -1,5 +1,6 @@
 let path = require('path')
 let HtmlWebpackPlugin = require('html-webpack-plugin')
+let MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   // 入口
   entry: __dirname + '/src/index.js',
@@ -23,18 +24,33 @@ module.exports = {
           options: {
             insertAt: 'top'
           }
-        },'css-loader']
+        },
+        // 解析css代码，解析css文件中通过@import引入
+        'css-loader',
+        // 自动添加浏览器兼容性前缀
+        'postcss-loader',
+      ]
       },
       // 解析less文件
       {
         test: /\.less$/,
-        use: ['style-loader','css-loader','less-loader']
+        use: [
+          'style-loader',
+          'css-loader',
+          'postcss-loader',
+          'less-loader']
       },
       // 解析sass文件
       {
         test:/\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
+        use: [
+          // 将抽离出来的css文件通过link的方式引入
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
+      },
     ]
   },
   mode: 'development',
@@ -55,6 +71,10 @@ module.exports = {
       },
       // 引入的js文件后面加上hash，避免文件名一致可能产生的缓存
       hash: true,
+    }),
+    // 将解析后的css抽离成css文件，并指定文件名
+    new MiniCssExtractPlugin({
+      filename:'main.css'
     })
   ],
   // 开发服务器
