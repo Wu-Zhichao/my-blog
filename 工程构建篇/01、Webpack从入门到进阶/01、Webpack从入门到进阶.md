@@ -756,12 +756,58 @@ webpack提供一个插件`webpack-dev-server`可以实现一个本地服务，�
     }
     ```
 ### ⑥ 压缩抽离出来的css文件
-我们在使用`mini-css-extract-plugin`抽离`css`文件的时候，抽离出来的`css`文件是没有经过压缩的，为了减小打包后的体积，也需要对`css`文件进行压缩。这里需要使用`optimize-css-assets-webpack-plugin`插件。
+我们在使用`mini-css-extract-plugin`抽离`css`文件的时候，抽离出来的`css`文件是没有经过压缩的，在生产环境为了减小打包后的体积，也需要对`css`文件进行压缩。这里需要使用`optimize-css-assets-webpack-plugin`插件。
 
 * `optimize-css-assets-webpack-plugin`插件作用：
 
   压缩抽离后的`css`文件。
   
-* 注意区别
+* 区别:
+
+  该插件需要在`webpack`的优化项`optimization`中进行配置，而不是在`plugins`中配置。
+
+* 注意:
   
-  
+  在优化项`optimization`中配置实例化`optimize-css-assets-webpack-plugin`插件对`css`进行压缩时,必须同时使用`terser-webpack-plugin`插件对js进行压缩，如果不配置，则js代码不会被压缩。
+
+* 安装:
+  ```c
+  npm install optimize-css-assets-webpack-plugin terser-webpack-plugin -D
+  ``` 
+
+* 配置:
+  ```javascript
+  const TerserWebpackPlugin = require('terser-webpack-plugin')
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+  const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+  module.exports = {
+    ...
+    // 优化项
+    optimization: {
+      minimizer: [
+        // 对js文件进行压缩
+        new TerserWebpackPlugin(),
+        // 对抽离出来的css文件进行压缩
+        new OptimizeCSSAssetsPlugin()
+      ]
+    },
+    plugins: [
+      // 将解析出的css抽离成css文件
+      new MiniCssExtractPlugin({
+        filename: 'main.css'
+      })
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            // 将抽离出来的css文件通过link的方式引入
+            MiniCssExtractPlugin.loader,
+            'css-loader'
+          ]
+        }
+      ]
+    }
+  }
+  ```

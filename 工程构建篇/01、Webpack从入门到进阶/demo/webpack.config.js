@@ -1,6 +1,8 @@
-let path = require('path')
-let HtmlWebpackPlugin = require('html-webpack-plugin')
-let MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 module.exports = {
   // 入口
   entry: __dirname + '/src/index.js',
@@ -10,6 +12,15 @@ module.exports = {
     path: path.resolve(__dirname,'dist'),
     // 文件名
     filename: 'bundlle.js'
+  },
+  // 优化项
+  optimization: {
+    minimizer: [
+      // 对js文件进行压缩
+      new TerserWebpackPlugin(),
+      // 对抽离出来的css文件进行压缩
+      new OptimizeCSSAssetsPlugin()
+    ]
   },
   // loader
   module: {
