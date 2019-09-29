@@ -3,8 +3,8 @@
 * `git add ./<file>` 提交本地内容到暂缓区，`.`表示全部提交，`file`表示提交的文件名
 * `git commit -m"xxxx"` 将暂缓区内容提交到本地仓库并进行备注
 * `git status` 查看本地内容状态
-* `git reset --hard HEAD^` 回退到上一个版本
-* `git reset --hard 版本号` 回退到具体的版本
+* `git reset --hard HEAD^` 本地回退到上一个版本
+* `git reset --hard 版本号` 本地回退到具体的版本
 * `git log` 查看提交的commit版本日志，但查看不到回退过的版本记录，即commit后回退了，该次commit记录查看不到
 * `git reflog` 查看所有的版本操作日志，方便查看每个操作步骤所在的版本,可以根据版本号自由前进后退
 * `git checkout -- <file>` 撤销在工作区的修改，回到和版本库一样的状态
@@ -97,6 +97,15 @@
   ```
   git fetch
   ```
+
+  *  如果远程仓库没有的分支，但是本地`remotes`中看到还有，可以使用如下命令清除：
+   ```
+    git remote prune origin
+   ```
+   *  如果远程仓库存在的`dev`分支，`git fetch`之后在`remotes`中可以看到，本地没有，可以使用如下命令同步：
+```
+git checkout -b dev origin/dev
+```
   2)、查看本地所有分支信息
   ```
   git branch -a
@@ -104,6 +113,27 @@
   3)、切换分支
   ```
   git checkout dev
+  ```
+
+  ## 6、已提交至远程的代码发现有问题需要回退到上一个版本
+  1)、本地回退
+  ```
+  git reset --hard HEAD^
+  ```
+
+  2)、推送远程
+  ```
+  git push -f
+  ```
+
+  ## 7、切换分支的时候，切换到新分支后新分支代码提示被修改或删除时需要放弃文件修改
+  * 放弃单文件修改
+  ```
+    git checkout -- 文件名
+  ```
+  * 放弃所有的文件修改
+  ```
+   git checkout .
   ```
 
   
