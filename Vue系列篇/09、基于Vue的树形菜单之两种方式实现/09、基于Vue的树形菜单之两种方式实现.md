@@ -191,3 +191,4 @@
   # 实现效果
   <img style="width: 800px" src="./img/效果.png"/>
 
+  以上就是用两种方式实现的树组件，重点在于递归的思想，希望对读者有所帮助。详情可以查看源代码：[源码]('https://github.com/Wu-Zhichao/my-blog/tree/master/Vue%E7%B3%BB%E5%88%97%E7%AF%87/09%E3%80%81%E5%9F%BA%E4%BA%8EVue%E7%9A%84%E6%A0%91%E5%BD%A2%E8%8F%9C%E5%8D%95%E4%B9%8B%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0/demo')
