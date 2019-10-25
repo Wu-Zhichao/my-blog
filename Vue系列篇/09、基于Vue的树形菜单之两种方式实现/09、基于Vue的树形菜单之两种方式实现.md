@@ -119,7 +119,7 @@
   ```
 
 ## 2、render函数
-  ```javascript
+  ```html
   // 子组件
   <script>
     import img1  from '../assets/img/icon_arrow_right.png'
