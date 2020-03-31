@@ -9,7 +9,7 @@
 * `git reflog` 查看所有的版本操作日志，方便查看每个操作步骤所在的版本,可以根据版本号自由前进后退
 * `git checkout -- <file>` 撤销在工作区的修改，回到和版本库一样的状态
 * `git branch 分支名` 创建分支
-* `git branch` 查看分支情况
+* `git branch` 查看本地分支情况
 * `git checkout 分支名` 切换分支
 * `git checkout -b 分支名` 创建并切换分支
 * `git merge 分支名` 合并某分支到当前分支
@@ -102,14 +102,18 @@
   ```
   此时，远程`dev`分支创建成功,代码也同步成功。
 
-  ## 4、同时删除本地和远程`dev`分支
+  ## 4、删除分支
   * 删除本地`dev`分支
   ```
   git branch -d dev
   ```
   * 删除远程`dev`分支
   ```
-  git push origin --delete dev
+  git push origin --delete dev 或 git push origin -d dev
+  ```
+  * 删除全部远程已经删除过的本地分支
+  ```
+  git remote prune origin
   ```
 
   ## 5、本地其他开发者远程拉取`dev`分支，并切换至`dev`分支
@@ -123,10 +127,10 @@
     git remote prune origin
    ```
    *  如果远程仓库存在的`dev`分支，`git fetch`之后在`remotes`中可以看到，本地没有，可以使用如下命令同步：
-```
-git checkout -b dev origin/dev
-```
-  2)、查看本地所有分支信息
+  ```
+  git checkout -b dev origin/dev
+  ```
+  2)、查看远程所有分支信息
   ```
   git branch -a
   ```
