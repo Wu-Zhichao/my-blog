@@ -390,7 +390,7 @@ webpack提供一个插件`webpack-dev-server`可以实现一个本地服务，�
 
   * 安装
     ```
-    npm install --save-dev webpack-dev-server
+    npm install --save-dev webpack-dev-server2
     ```
 
   * 启动服务
