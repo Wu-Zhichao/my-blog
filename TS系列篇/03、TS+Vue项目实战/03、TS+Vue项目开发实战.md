@@ -1,4 +1,5 @@
-#### 全局安装`vue`脚手架
+# 1、初始化项目及环境搭建
+## 1.1、全局安装`vue`脚手架
 ```bash
 npm install -g @vue/cli
 ```
@@ -7,7 +8,7 @@ npm install -g @vue/cli
 vue --version 
 ```
 
-#### 使用vue@cli 4.0初始化项目
+## 1.2、使用vue@cli 4.0初始化项目
 ```bash
 vue create ts-vue-music
 ```
@@ -61,12 +62,12 @@ vue create ts-vue-music
 
 * 启动项目
 ```bash
-cd ts-vue-music // 进入项目根目录
+cd ts-vue-todolist // 进入项目根目录
 npm run serve // 运行项目
 ```
 项目启动后，在浏览器输入对应的地址就可以看到界面了。
 
-#### 改造项目结构
+## 1.3、改造项目结构
 > 使用脚手架初始化后会默认生成一个项目结构目录，但我们可以根据自己的项目需求进行改造。
 
 * 调整项目结构目录
@@ -181,3 +182,36 @@ module.exports = {
 };
 ```
 至此，一套完整的`Vue`+`TypeScript`的开发环境就搭建完成了。接下来就可以愉快的进行项目开发了。
+
+# 2、快速上手项目开发
+## 2.1、让TS识别Vue
+* `.vue`后缀文件导入
+`TypeScript`开发环境默认是只能识别`*.ts`和`*.tsx`文件的，因此在遇到导入`*.vue`文件时，会无法识别，因此在导入`vue`文件时需要加上后缀`.vue`,如下：
+  ```bash
+  import Component from 'components/component.vue'
+  ```
+* 声明文件
+`VueCli`脚手架生成的项目目录下默认会有一个`shims-vue.d.ts`文件，内容如下：
+  ```bash
+  declare module '*.vue' {
+    import Vue from 'vue'
+    export default Vue
+  }
+  ```
+  该声明文件是告诉TS以`.vue`为后缀的文件交给`Vue`模块处理，文件中`vue`是指`Vue`的实例。
+
+## 2.2、从`vue-class-component`和`vue-property-decorator`说起
+* vue-class-component
+`vue-class-component`是`Vue`的官方一个基于类组件的一个库，它可以让我们以类的方式开发`Vue`组件，它提供的`Component`装饰器为类添加注释，从而以直观和标准的类语法定义组件数据和方法。
+* vue-property-decorator 
+
+## 2.3、新的组件定义方式
+
+
+* data
+### 2.31、父子组件通信
+
+# 3、使用JSX进行组件开发
+
+# 4、引入Vuex进行状态管理
+

@@ -391,8 +391,8 @@ Redux是React框架下的一款状态管理工具，可以实现多个组件之�
     export default reducer;
 
 |- index.js // 入口js
-  import React from 'react
-  import ReactDOM from 'react-dom
+  import React from 'react'
+  import ReactDOM from 'react-dom'
   import { Provider } from 'react-redux'
   import store from './store'
   import TodoList from './TodoList'
