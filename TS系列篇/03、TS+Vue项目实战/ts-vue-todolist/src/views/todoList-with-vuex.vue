@@ -1,7 +1,7 @@
 <template>
   <div class="todo-list">
     <div class="nav">
-      <a-input placeholder="please input todo" v-model="inputValue"/>
+      <a-input placeholder="please input todo" ref='input' v-model="inputValue"/>
       <a-button type="primary" @click="addTodoItem">添加</a-button>
     </div>
     <ul class="list">
@@ -18,7 +18,7 @@
 
 <script lang='ts'>
 // @ is an alias to /src
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component,Ref } from 'vue-property-decorator'
 import TodoItem from '@/components/todoListItem-with-vuex.vue'
 import { State, Mutation } from 'vuex-class';
 
@@ -32,6 +32,7 @@ export default class TodoList extends Vue {
   // store state
   @State public todoList!:any
   @Mutation public setTodoList!:any
+  @Ref() readonly input!: HTMLInputElement 
   // data
   private inputValue: string = ''
   // methods
@@ -44,6 +45,8 @@ export default class TodoList extends Vue {
     }
     this.setTodoList(item)
     this.inputValue = ''
+    console.log(this.input)
+
   }
 }
 </script>

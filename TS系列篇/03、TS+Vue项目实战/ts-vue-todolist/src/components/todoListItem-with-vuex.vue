@@ -19,6 +19,8 @@ export default class TodoListItem extends Vue {
   @Prop({default: {} }) public item!: ItemContent
   @Prop() public itemIndex!: number
   @Mutation public updateTodoList!: any
+  public test: string = '1123'
+  created() {console.log('xxxx')}
   // method
   private deleteItem() {
     this.updateTodoList(this.itemIndex)

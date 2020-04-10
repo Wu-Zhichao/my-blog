@@ -33,5 +33,4 @@ export default class TodoItem extends Vue {
   private onDelete() {
     return this.itemIndex
   }
-
 }
