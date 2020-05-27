@@ -1,0 +1,5 @@
+console.log('hello webpack')
+// require('./index.css')
+// require('./index.less')
+// import('./index.less')
+import('./index.scss')
