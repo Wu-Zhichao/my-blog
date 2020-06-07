@@ -220,7 +220,7 @@ Component.registerHooks([
 // 定义类组件，需要使用@Component装饰器装饰
 @Component({
   // components、props、watch及其他options
-  // 其他options可以查看：
+  // 其他options可以查看：https://vuejs.org/v2/api/#Options-Data
   components: {
     childComponent
   },
