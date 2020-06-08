@@ -37,7 +37,7 @@ CI/CD 是一种通过在应用开发阶段引入自动化来频繁向客户交�
 # 3、使用Jenkins进行持续集成
 ## 3.1、CI/CD环境搭建
 * 准备工作
-阿里云服务器一台，我这里是使用的是Aliyun Centos 7，并使用`XShell`登录阿里云服务器。
+阿里云服务器一台，我这里是使用的是`aliyun Centos 7`，并使用`XShell`登录阿里云服务器。
 
 * 安装Java JDK
 `jenkins`工具是由`java`编写的，依赖于`java`环境，因此需要安装`java jdk`。
@@ -69,5 +69,26 @@ yum install -y jenkins
 ```
 * 启动Jenkins
 ```bash
-service jenkins restart
+service jenkins start
 ```
+* 查看Jenkins是否启动成功
+
+执行启动命令`service jenkins start`后，正常会是下面的状态：
+<img src="./img/jenkins01.png" width='100%'>
+也可以通过如下命令查看：
+```bash
+service jenkins status
+```
+显示如下则为启动成功：
+<img src='./img/jenkins02.png' width="100%">
+
+然后，就可以在浏览器通过`ip`访问了，默认是`80`端口，如`80`端口未被占用，通过`ip`访问会出现以下界面：
+<img src="./img/jenkins03.png" width="100%">
+
+如通过`ip`无法访问，则可通过以下命令查看`80`端口是否被占用：
+```bash
+
+```
+
+* 修改默认端口
+
