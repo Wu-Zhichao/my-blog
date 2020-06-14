@@ -35,7 +35,7 @@ CI/CD 是一种通过在应用开发阶段引入自动化来频繁向客户交�
 ```
 
 # 3、使用Jenkins进行持续集成
-## 3.1、CI/CD环境搭建
+## 3.1、Jenkins环境搭建
 * 准备工作
 阿里云服务器一台，我这里是使用的是`aliyun Centos 7`，并使用`XShell`登录阿里云服务器。
 
@@ -82,13 +82,69 @@ service jenkins status
 显示如下则为启动成功：
 <img src='./img/jenkins02.png' width="100%">
 
-然后，就可以在浏览器通过`ip`访问了，默认是`80`端口，如`80`端口未被占用，通过`ip`访问会出现以下界面：
+然后，就可以在浏览器通过`ip`访问了，默认是`8080`端口，如`8080`端口未被占用，通过`ip`访问会出现以下界面：
 <img src="./img/jenkins03.png" width="100%">
 
-如通过`ip`无法访问，则可通过以下命令查看`80`端口是否被占用：
-```bash
+* 查看端口是否被占用
 
+如通过`ip`无法访问，则可通过以下命令查看`8080`端口是否被占用：
+```bash
+netstat -ntlp
 ```
 
 * 修改默认端口
+如果`80`端口被占用，则需要修改`jenkins`默认端口号。`jenkins`配置文件默认安装在`/etc/sysconfig/jenkins`,通过`vim`编辑器打开即可修改。
+```bash
+vim /etc/sysconfig/jenkins
+```
+进行如下修改：
+<img src='./img/jenkins04.png' width="100%">
+
+保存后执行重启命令：
+```bash
+service jenkins restart
+```
+然后在浏览器通过`ip:端口号`访问即可出现上面解锁界面，则说明端口号修改成功。
+
+`ps`：如果还是无法访问，则要查看阿里云的安全策略组端口是否开放，如果没有开放给则需要登录阿里云后台配置安全策略组开放对应端口。
+
+* 获取解锁密码
+`jenkins`初始页面的解锁密码放在`/var/lib/jenkins/secrets/initialAdminPassword`文件内，通过`vim`编辑器打开查看。
+```bash
+vim /var/lib/jenkins/secrets/initialAdminPassword
+```
+将获取到的密码填入浏览器`jenkins`初始页面的密码输入框内，点击继续即可进入到`jenkins`插件配置界面。
+<img src="./img/jenkins05.png" width="100%">
+
+## 3.2、Jenkins插件配置
+为了更加清楚的知道`Jenkins`常用的插件有哪些，以及每个插件的作用，我们这里这里选择第二个选项`选择插件来安装`，选择之后会进入到一个选择安装插件的界面，这里我们也选择`无`，具体需要是由的插件我们后续可以通过管理页面去安装，选择`继续`后，就出现了下面创建第一个用户的界面：
+<img src="./img/jenkins06.png" width="100%"> 
+
+我们创建一个`admin`账户并设置密码，然后保存就进入`Jenkins`就绪页面。
+<img src="./img/jenkins07.png" width="100%">
+
+点击`开始使用Jenkins`后就默认使用`admin`账号登录进入到主界面。
+<img src="./img/jenkins08.png" width="100%">
+
+`Jenkins`其实只是一个平台，实现不同功能主要依靠的是插件，下面我们就来了解下，使用`Jenkins`构建必不可少的插件。安装插件可在如下路径操作：
+`Manage Jenkins` -> `Manage Plugins` 界面，我们之前进入时是`选择插件来安装`,所以默认是没有任何插件的。
+<img src="./img/jenkins09.png" width="100%">
+
+需要使用的插件，我们需要通过搜索框搜索自己需要的插件来安装。
+<img src="./img/jenkins10.png" width="100%">
+
+* Locale 
+汉化插件，`Jenkins`默认是英文界面，如果需要使用中文界面就需要安装此插件。
+安装完成之后，进入到`Manage Jenkins->Configure System`界面，你会发现多了`Local`一栏，进行如下设置：
+
+<img src="./img/jenkins11.png" width="100%">
+
+然后点击`save`保存，在浏览器地址栏端口号后加上`/restart`重启`Jenkins`即可，也可以通过命令行`service jenkins restart`重启。
+
+  `ps`这个插件需要依赖到其他插件，因此安装完之后你会发现已安装界面有很多不认识的插件，不用管它们。
+
+
+
+
+
 
