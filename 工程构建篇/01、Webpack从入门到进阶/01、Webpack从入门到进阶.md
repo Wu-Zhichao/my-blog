@@ -2,23 +2,23 @@
 Webpack可以看作是一个模块打包机，它可以实现将浏览器不能直接识别的语言（SCSS，TypeScript...）和文件（.vue,.ts...）编译成浏览器可以识别的js文件，同时还可以实现代码转换、文件优化、代码分割、模块合并、自动刷新、代码校验、自动发布等功能。
 
 # 二、使用前准备
-1. 全局安装webpack
+* 1、 全局安装webpack
     ```C
       npm install -g webpack
     ```
-2. 创建项目目录
+* 2、创建项目目录
     ```C
       // 创建webpack文件夹
       mkdir webpack
       // 切换到Webpack文件夹目录
       cd webpack
     ```
-3. 初始化项目
+* 3、初始化项目
     ```C
       // 初始化项目，生成package.json配置文件
       npm init -y
     ```
-4. 局部安装webpack和webpack-cli
+* 4、局部安装webpack和webpack-cli
     ```C
       npm install  webpack webpack-cli -D
     ```
@@ -812,7 +812,7 @@ webpack提供一个插件`webpack-dev-server`可以实现一个本地服务，�
   }
   ```
 
-## 3、ES高级语法转换为ES5
+## 3、ES6高级语法转换为ES5
 `webpack`在处理`js`模板的时候，因为有些新的特性浏览器不支持，需要将新的高级语法转换为浏览器可以执行的`ES5`语法。因此就需要使用`babel`来进行处理。`babel`主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
 ### ① ES6语法转换为ES5
 * 安装 
