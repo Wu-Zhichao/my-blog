@@ -135,7 +135,7 @@ methods: {
 }
 ```
 
-# 6、解析树结构数据，拼接成`Tree`组件所需格式
+# 6、解析树结构数据，拼接成`iView`的`Tree`组件所需格式
 ```javascript
 export const getTree = (tree = []) => {
   let arr = []
