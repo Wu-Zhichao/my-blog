@@ -683,7 +683,7 @@ module.exports = {
       "@": path.resolve(__dirname, "./src"),
     }),
     /**暴露webpack的配置
-     * 当插件内置方法不足以满足我们的要求时，可以接收一个函数来暴露webpack所有配置，
+     * 当插件内置方法不足以满足我们的要求时，可以接收一个函数来暴露webpack所有配置
      * 进行添加或修改loader，plugins，如此就可以满足所有的需求了
      */
     (config) => {
@@ -701,7 +701,7 @@ module.exports = {
       /**
        * 添加和修改loader配置
        */
-      // 获取所有的loader信息，
+      // 获取所有的loader信息
       let loaders = config.module.rules.find((rule) =>
         Array.isArray(rule.oneOf)
       ).oneOf;
