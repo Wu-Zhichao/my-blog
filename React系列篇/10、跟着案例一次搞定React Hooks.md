@@ -883,6 +883,9 @@ function Example2(){
 ReactDOM.render(<><Example1 /><Example2 /></>, document.getElementById('root'));
 ```
 # 5. Hooks参考周边
+- [案例代码]('https://github.com/Wu-Zhichao/learn-react')
 - [高质量的自定义hooks库-ahooks]('https://ahooks.js.org/')
 - [十个案例学会 React Hooks]('https://github.com/happylindz/blog/issues/19')
 - [React Hooks 详解]('https://juejin.cn/post/6844903985338400782#heading-28')
+
+本文首发于微信公众号'前端螺丝钉'
