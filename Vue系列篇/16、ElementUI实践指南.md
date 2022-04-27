@@ -147,3 +147,65 @@ handleOnKeyDown(e) {
   }
 }
 ```
+# 7. 日期组件设置禁选时间
+日期组件可以通过设置`picker-options`属性来控制禁选时间。
+```js
+ <el-date-picker
+    v-model="form.belongDatePeriod"
+    type="daterange"
+    align="left"
+    range-separator="-"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期"
+    value-format="yyyy-MM-dd"
+    :clearable="false"
+    :editable="false"
+    :picker-options="pickerOptions"
+  >
+  </el-date-picker>
+  ......
+  data() {
+    return {
+      pickerOptions: {
+        disabledDate(time) {
+          return setDatePickerDisableAfterDate(
+            time,
+            `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
+          )
+        }
+      },
+    }
+  },
+  methods: {
+    setDatePickerDisableAfterDate (time, pickerTime)  {
+      // 获取指定时间点的年月日
+      const date = new Date(pickerTime)
+      const year = date.getFullYear() // 年
+      let month = date.getMonth() + 1 // 月
+      let day = date.getDate() // 日
+      // 如果是1-9月需要在前面补0
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (day >= 1 && day <= 9) {
+        day = '0' + day
+      }
+      // 获取到的指定时间的年月日就是：
+      const pointDate = year.toString() + month.toString() + day.toString()
+
+      // 获取时间选择器的年月日
+      const pickerYear = time.getFullYear()
+      let pickerMonth = time.getMonth() + 1
+      let pickerDay = time.getDate()
+      if (pickerMonth >= 1 && pickerMonth <= 9) {
+        pickerMonth = '0' + pickerMonth
+      }
+      if (pickerDay >= 1 && pickerDay <= 9) {
+        pickerDay = '0' + pickerDay
+      }
+      const pickerDate = pickerYear.toString() + pickerMonth.toString() + pickerDay.toString()
+      // 为true的时间就不能选
+      return pickerDate >= pointDate
+    }
+  }
+```
