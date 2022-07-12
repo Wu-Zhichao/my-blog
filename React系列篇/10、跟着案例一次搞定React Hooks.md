@@ -17,6 +17,7 @@ React Hooks是React V16.8版本新增的特性，即在不编写类组件的情�
 
 # 3. 10个官方Hooks案例详解
 ## 3.1. useState
+定义组件状态，在组件中需要被保存的数据（不用组件每次更新都重新初始化），都可以通过`useState`来定义。
 ```js
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -130,8 +131,64 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+```
+- 注意
+如果想要在`useState`参数中保存函数，那么函数参数会在组件初始化时执行，后续渲染时会被忽略，如果初始`state`需要通过复杂计算获得，则可以传入一个函数，在函数中计算并返回初始的 `state`.
+```js
+const [state, setState] = useState(() => {
+  // 只会在组件初始化时执行一次
+  const initialState = someExpensiveComputation(props);
+  return initialState;
+});
+```
+那么，如果想要用`useState`保存函数，有什么办法呢？
+1. 方式一：在函数外面在包一层函数
+```js
+import React, { useState } from "react";
+export default function App() {
+  const [callback, setCallback] = useState(() => () => {
+    console.log("hello");
+  });
+  console.log(callback);
+  return (
+    <div className="App">
+      <button onClick={() => setCallback(() => () => console.log("world"))}>
+        setCallback
+      </button>
+      {/* 第一次调用点击打印hello，执行setCallback后打印world */}
+      <button onClick={callback}>callback</button>
+    </div>
+  );
+}
+```
+2. 使用useRef
+```js
+import React, { useRef } from "react";
+export default function App() {
+  // useRef可以一直保留状态初始化时的引用，组件更新时还是保留之前的引用
+  const callbackRef = useRef(() => console.log("hello"));
+  const callback = callbackRef.current;
+  console.log(callback);
+  return (
+    <div className="App">
+      <button
+        onClick={() => (callbackRef.current = () => console.log("world"))}
+      >
+        setCallback
+      </button>
+      {/* callback 是首次渲染时保留的callbackRef的函数引用，所以会一直打印hellow */}
+      <button onClick={callback}>callback</button>
+      {/* 首次打印hello，执行setCallback后，已经更新为新的函数引用了，所以打印world */}
+      <button onClick={() => callbackRef.current()}>
+        callbackRef callback
+      </button>
+    </div>
+  );
+}
 
 ```
+
+
 ## 3.2. useEffect
 ```js
 import React, { useEffect, useState } from 'react';
@@ -286,6 +343,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+- 注意：
+*非状态的非基本类型的数据，不要作为依赖，因为引用类型的数据保留的是一个引用，组件重新渲染初始化时会创建新的引用，导致依赖发生变化，useEffect会重复执行，造成死循环。*
+
 ## 3.3. useContext
 ```js
 import React, { useContext, useState }  from "react";
@@ -610,7 +670,7 @@ const Counter1 = () => {
 // 使用类组件实现相似功能： 使用useRef定义的变量，相当于类组件的实例属性
 class Counter2 extends React.Component {
   state = { count: 0}
-  prevCount = 0 // 相当于useRef定义的变量，不会在更新渲染时重新初始化
+  prevCount = 0 //实例属性 相当于useRef定义的变量，不会在更新渲染时重新初始化
   // 初始化渲染完成后执行
   componentDidMount() {
     console.log('组件初始化渲染完毕Counter2')

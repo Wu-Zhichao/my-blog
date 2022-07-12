@@ -209,3 +209,42 @@ handleOnKeyDown(e) {
     }
   }
 ```
+# 8. 输入框禁止自动填充账号密码
+在`el-input`中，浏览器会自动将已保存的账号密码填充到`type`为`password`的输入框中，当不需要时可以设置`autocomplete="new-password`
+```js
+<el-input
+    v-model="formData.password"
+    show-password
+    placeholder="请输入密码"
+    style="width: 240px"
+    clearable
+    autocomplete="new-password"
+  ></el-input>
+```
+
+# 9. 表单校验参入业务逻辑
+```js
+formRules: {
+  amount: [
+    {
+      required: true,
+      message: '请输入金额',
+      trigger: 'blur'
+    },
+    {
+      validator(rule, value, cb) {
+        if (Number(value) === 0) {
+          cb(new Error(`输入金额不能为0`))
+        } else {
+          cb()
+        }
+      }
+    },
+    {
+      validator: (rule, value, cb) => {
+        Number(value) > Number(this.formData.balance) ? cb('输入金额不能大于可用余额') : cb()
+      }
+    }
+  ]
+}
+```
